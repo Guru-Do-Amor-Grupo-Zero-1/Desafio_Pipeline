@@ -38,6 +38,7 @@ public class UsuarioController {
     public ResponseEntity <HttpStatus> createPedido(@RequestBody final Usuario usuario) {
         try {
             this.usuarioService.save(usuario);
+            System.out.println("Teste pipeline");
             return ResponseEntity.ok(HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
