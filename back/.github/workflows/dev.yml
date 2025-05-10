@@ -1,0 +1,45 @@
+name: CI/CD para Kubernetes (Stage)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Rodar testes com Maven
+        run: mvn test
+
+      - name: Autenticar no Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Instalar gcloud + kubectl
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: desafio-pipeline
+          install_components: 'kubectl'
+          export_default_credentials: true
+
+      - name: Acessar cluster do GKE
+        run: |
+          gcloud container clusters get-credentials desafio-pipeline-01 \
+            --zone us-central1-c \
+            --project desafio-pipeline
+
+      - name: Aplicar manifests no namespace stage
+        run: |
+          kubectl apply -f k8s/ --namespace=stage
