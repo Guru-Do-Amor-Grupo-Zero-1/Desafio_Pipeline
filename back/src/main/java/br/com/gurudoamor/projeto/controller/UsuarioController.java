@@ -35,15 +35,15 @@ public class UsuarioController {
     }
 
     @PostMapping("/adicionar")
-    public ResponseEntity <HttpStatus> createPedido(@RequestBody final Usuario usuario) {
+    public ResponseEntity<String> createPedido(@RequestBody final Usuario usuario) {
         try {
             this.usuarioService.save(usuario);
-            System.out.println("Teste pipeline");
-            return ResponseEntity.ok(HttpStatus.CREATED);
-        } catch (DataIntegrityViolationException e){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Criado com sucesso", HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("Erro ao salvar usuário", HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteUsuario(@PathVariable("id") final Long id) {
