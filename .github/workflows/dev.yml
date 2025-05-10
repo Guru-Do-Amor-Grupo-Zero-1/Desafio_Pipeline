@@ -37,7 +37,7 @@ jobs:
       - name: Acessar cluster do GKE
         run: |
           gcloud container clusters get-credentials desafio-pipeline-01 \
-            --zone us-central1-c \
+            --zone us-central1 \
             --project desafio-pipeline
 
       - name: Aplicar manifests no namespace stage
