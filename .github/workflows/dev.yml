@@ -42,4 +42,4 @@ jobs:
 
       - name: Aplicar manifests no namespace stage
         run: |
-          kubectl apply -f k8s/ --namespace=stage
+          kubectl apply -f k8s/base/ --namespace=stage
