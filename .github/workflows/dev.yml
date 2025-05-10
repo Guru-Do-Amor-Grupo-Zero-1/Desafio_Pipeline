@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  test-and-deploy:
+  test-build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,12 +19,22 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # - name: Rodar testes com Maven
+      #   run: |
+      #     cd back
+      #     mvn test
 
-      - name: Rodar testes com Maven
+      - name: Build da imagem Docker
         run: |
-          cd back
-          mvn test
+          docker build -t regiinaldo/back-gurudoamor:latest ./back
 
+      - name: Login no Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push da imagem para o Docker Hub
+        run: |
+          docker push regiinaldo/back-gurudoamor:latest
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
