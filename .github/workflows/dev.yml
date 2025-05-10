@@ -20,6 +20,10 @@ jobs:
           java-version: '17'
 
 
+      - name: Rodar testes com Maven
+        run: |
+          cd back
+          mvn test
 
 
       - name: Autenticar no Google Cloud
