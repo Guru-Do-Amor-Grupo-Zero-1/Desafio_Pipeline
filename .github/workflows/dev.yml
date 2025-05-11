@@ -24,7 +24,7 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker push us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }} ./back
+          docker build -t us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }} ./back
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
