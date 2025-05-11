@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline:TAG_AQUI
+          image: us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:TAG_AQUI
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
