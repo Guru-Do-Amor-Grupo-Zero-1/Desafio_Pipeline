@@ -24,7 +24,7 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker build -t us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline:dev-${{ github.sha }} ./back
+          docker push us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }} ./back
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
@@ -37,7 +37,7 @@ jobs:
 
       - name: Push da imagem para o Google Artifact Registry
         run: |
-          docker push us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline:dev-${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }}
 
       - name: Substituir tag da imagem no manifest
         run: |
