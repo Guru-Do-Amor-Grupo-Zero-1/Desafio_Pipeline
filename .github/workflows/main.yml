@@ -54,7 +54,7 @@ jobs:
 
       - name: Aplicar manifests no namespace production
         run: |
-          kubectl apply -f k8s/base/ --namespace=production
+          kubectl apply -f k8s/production/ --namespace=production
 
       - name: Forçar reinício dos pods (caso necessário)
         run: |
