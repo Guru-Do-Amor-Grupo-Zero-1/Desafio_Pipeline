@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: regiinaldo/back-gurudoamor:latest
+          image: us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${GITHUB_SHA}
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

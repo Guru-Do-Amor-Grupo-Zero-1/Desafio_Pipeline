@@ -24,20 +24,20 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker build -t us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline/backend:dev-${{ github.sha }} ./back
+          docker build -t us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }} ./back
+
+      - name: Login no Google Container Registry (GCR)
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Push da imagem para o Google Artifact Registry
+        run: |
+          docker push us-central1-docker.pkg.dev/desafio-pipeline/backend-kubernetes2:dev-${{ github.sha }}
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Login no Google Artifact Registry
-        run: |
-          gcloud auth configure-docker us-central1-docker.pkg.dev
-
-      - name: Push da imagem para o Artifact Registry
-        run: |
-          docker push us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline/backend:dev-${{ github.sha }}
 
       - name: Instalar gcloud + kubectl
         uses: google-github-actions/setup-gcloud@v2
@@ -56,6 +56,6 @@ jobs:
         run: |
           kubectl apply -f k8s/base/ --namespace=stage
 
-      - name: Atualizar imagem do deployment
+      - name: Forçar reinício dos pods (caso necessário)
         run: |
-          kubectl set image deployment/backend backend=us-central1-docker.pkg.dev/desafio-pipeline/desafio-pipeline/backend:dev-${{ github.sha }} -n stage
+          kubectl rollout restart deployment/backend -n stage
