@@ -1,9 +1,9 @@
-name: CI/CD para Kubernetes (Stage)
+name: CI/CD para Kubernetes (Main)
 
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   test-build-deploy:
@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      #- name: Rodar testes com Maven
+     # - name: Rodar testes com Maven
       #  run: mvn clean test -X -f back/pom.xml
 
       - name: Build da imagem Docker
@@ -52,10 +52,10 @@ jobs:
             --zone us-central1 \
             --project desafio-pipeline
 
-      - name: Aplicar manifests no namespace stage
+      - name: Aplicar manifests no namespace production
         run: |
-          kubectl apply -f k8s/base/ --namespace=stage
+          kubectl apply -f k8s/base/ --namespace=production
 
       - name: Forçar reinício dos pods (caso necessário)
         run: |
-          kubectl rollout restart deployment/backend -n stage
+          kubectl rollout restart deployment/backend -n production
