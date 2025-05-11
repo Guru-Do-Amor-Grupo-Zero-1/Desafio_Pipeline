@@ -19,10 +19,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # - name: Rodar testes com Maven
-      #   run: |
-      #     cd back
-      #     mvn test
+      - name: Rodar testes com Maven
+        run: mvn test -f back/pom.xml
 
       - name: Build da imagem Docker
         run: |
