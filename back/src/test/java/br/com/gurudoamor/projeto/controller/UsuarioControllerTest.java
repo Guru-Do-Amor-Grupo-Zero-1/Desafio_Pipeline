@@ -75,8 +75,9 @@ public class UsuarioControllerTest {
         mockMvc.perform(post("/api/usuario/adicionar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuario)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
+
 
     @Test
     void testDeleteUsuario() throws Exception {
