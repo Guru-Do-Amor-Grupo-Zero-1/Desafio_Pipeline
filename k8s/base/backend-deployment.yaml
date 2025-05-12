@@ -32,10 +32,3 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_PASSWORD
-          resources:
-            requests:
-              cpu: "500m"
-              memory: "256Mi"
-            limits:
-              cpu: "1"
-              memory: "1Gi"
