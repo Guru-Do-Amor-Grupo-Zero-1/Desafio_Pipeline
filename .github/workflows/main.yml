@@ -51,8 +51,5 @@ jobs:
           gcloud container clusters get-credentials cluster-desafio-pipeline \
             --zone us-central1-a \
             --project desafio-pipeline
-
-      - name: Aplicar manifests no namespace production
-        run: |
           kubectl apply -f k8s/production/ --namespace=production
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n production
