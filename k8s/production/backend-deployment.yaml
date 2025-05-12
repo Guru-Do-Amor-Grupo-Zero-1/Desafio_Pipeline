@@ -15,12 +15,13 @@ spec:
     spec:
       containers:
         - name: backend
-          image: regiinaldo/back-gurudoamor:production
+          image: regiinaldo/back-gurudoamor:dev-${{github.sha}}
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres.production.svc.cluster.local:5432/gurudoamor
+              value: jdbc:postgresql://postgres.stage.svc.cluster.local:5432/gurudoamor
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
