@@ -55,4 +55,4 @@ jobs:
       - name: Aplicar manifests no namespace stage
         run: |
           kubectl apply -f k8s/base/ --namespace=stage
-          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:latest -n stage
+          kubectl set image deployment/backend regiinaldo/back-gurudoamor:latest -n stage
