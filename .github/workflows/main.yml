@@ -24,7 +24,7 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker build -t regiinaldo/back-gurudoamor:latest ./back
+          docker build -t regiinaldo/back-gurudoamor:dev-${{github.sha}} ./back
 
       - name: Login no Docker Hub
         run: |
@@ -32,7 +32,7 @@ jobs:
 
       - name: Push da imagem para o Docker Hub
         run: |
-          docker push regiinaldo/back-gurudoamor:latest
+          docker push regiinaldo/back-gurudoamor:dev-${{github.sha}}
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
@@ -48,20 +48,11 @@ jobs:
 
       - name: Acessar cluster do GKE
         run: |
-          gcloud container clusters get-credentials desafio-pipeline-01 \
-            --zone us-central1 \
+          gcloud container clusters get-credentials cluster-desafio-pipeline \
+            --zone us-central1-a \
             --project desafio-pipeline
 
-      # Passo para excluir o PVC antigo (se necessário)
-      - name: Excluir PVC antigo
-        run: |
-          kubectl delete pvc postgres-pvc -n production || echo "PVC não encontrado, continuando..."
-
-      # Passo para aplicar os manifests do Kubernetes
       - name: Aplicar manifests no namespace production
         run: |
           kubectl apply -f k8s/production/ --namespace=production
-
-      - name: Forçar reinício dos pods (caso necessário)
-        run: |
-          kubectl rollout restart deployment/backend -n production
+          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n production
