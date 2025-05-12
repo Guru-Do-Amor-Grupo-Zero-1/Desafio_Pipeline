@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: regiinaldo/back-gurudoamor:latest
+          image: regiinaldo/back-gurudoamor:teste
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
