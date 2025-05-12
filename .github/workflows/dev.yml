@@ -24,7 +24,7 @@ jobs:
 
       - name: Build da imagem Docker
         run: |
-          docker build -t regiinaldo/back-gurudoamor:teste ./back
+          docker build -t regiinaldo/back-gurudoamor:dev-${{github.sha}} ./back
 
       - name: Login no Docker Hub
         run: |
@@ -32,7 +32,7 @@ jobs:
 
       - name: Push da imagem para o Docker Hub
         run: |
-          docker push regiinaldo/back-gurudoamor:teste
+          docker push regiinaldo/back-gurudoamor:dev-${{github.sha}}
 
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
@@ -52,4 +52,4 @@ jobs:
             --zone us-central1-a \
             --project desafio-pipeline
           kubectl apply -f k8s/base/ --namespace=stage
-          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:teste -n stage
+          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n stage
