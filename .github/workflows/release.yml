@@ -33,3 +33,14 @@ jobs:
       - name: Push da imagem para o Docker Hub
         run: |
           docker push regiinaldo/back-gurudoamor:release-${{github.sha}}
+
+      - name: Criar payload do Slack
+        run: |
+          echo "{"text":"Nova release publicada!"}" > slack-payload.json
+          
+      - name: Notificação Slack
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload-file-path: ./slack-payload.json
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
