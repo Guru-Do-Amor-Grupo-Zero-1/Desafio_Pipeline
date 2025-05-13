@@ -44,4 +44,4 @@ jobs:
         with:
           payload-file-path: ./slack-payload.json
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} #teste
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} #apresentação
