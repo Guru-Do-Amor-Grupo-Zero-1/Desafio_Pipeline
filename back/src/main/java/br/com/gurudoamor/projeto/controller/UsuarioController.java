@@ -38,7 +38,7 @@ public class UsuarioController {
     public ResponseEntity<String> createPedido(@RequestBody final Usuario usuario) {
         try {
             this.usuarioService.save(usuario);
-            return new ResponseEntity<>("Criado com sucesso", HttpStatus.CREATED);
+            return new ResponseEntity<>("TESTE PRODUCAO", HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("Erro ao salvar usuário", HttpStatus.BAD_REQUEST);
         }
