@@ -20,7 +20,7 @@ jobs:
 
       - name: Instalar dependências
         run: npm install
-        working-directory: front
+        working-directory: front-agora
 
       - name: Build do Angular
         run: npm run build -- --configuration production
