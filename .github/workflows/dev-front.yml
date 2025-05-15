@@ -24,12 +24,12 @@ jobs:
 
       - name: Build do Angular
         run: npm run build -- --configuration production
-        working-directory: front
+        working-directory: front-agora
 
       - name: Build da imagem Docker
         run: |
           docker build -t regiinaldo/front-gurudoamor:dev-${{ github.sha }} .
-        working-directory: front
+        working-directory: front-agora
 
       - name: Login no Docker Hub
         run: |
@@ -59,3 +59,4 @@ jobs:
 
           kubectl apply -f k8s/base/ --namespace=stage
           kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:dev-${{ github.sha }} -n stage
+  
