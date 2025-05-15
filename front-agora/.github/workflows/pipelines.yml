@@ -1,0 +1,49 @@
+name: CI/CD para Frontend Angular 
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Build do Angular
+        run: npm run build --prod
+
+      - name: Configurar chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCP_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.GCP_VM_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Enviar arquivos para a VM
+        run: |
+          scp -r dist/guru_do_amor ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/home/${{ secrets.GCP_VM_USER }}/frontend/dist
+          scp -r certs ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/home/${{ secrets.GCP_VM_USER }}/frontend/
+          scp Dockerfile ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/home/${{ secrets.GCP_VM_USER }}/frontend/
+          scp default.conf ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }}:/home/${{ secrets.GCP_VM_USER }}/frontend/
+
+      - name: Build e restart do container na VM
+        run: |
+          ssh ${{ secrets.GCP_VM_USER }}@${{ secrets.GCP_VM_HOST }} << 'EOF'
+            cd ~/frontend
+            docker stop frontend || true
+            docker rm frontend || true
+            docker build --no-cache -t angular-frontend .
+            docker run -d -p 80:80 -p 443:443 --name frontend angular-frontend
+          EOF
