@@ -53,3 +53,4 @@ jobs:
             --project desafio-pipeline
           kubectl apply -f k8s/base/ --namespace=stage
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n stage
+
