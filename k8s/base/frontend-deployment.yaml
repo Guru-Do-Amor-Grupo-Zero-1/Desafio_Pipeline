@@ -10,25 +10,12 @@ spec:
       app: frontend
   template:
     metadata:
-      labels:
+      labels: 
         app: frontend
     spec:
       containers:
         - name: frontend
-          image: regiinaldo/frontend-gurudoamor:dev-${{github.sha}}
+          image: regiinaldo/front-gurudoamor:dev-${{github.sha}}
           imagePullPolicy: Always
           ports:
-            - containerPort: 5000
-          env:
-            - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres.stage.svc.cluster.local:5432/gurudoamor
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: POSTGRES_USER
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: db-secret
-                  key: POSTGRES_PASSWORD
+            - containerPort: 80
