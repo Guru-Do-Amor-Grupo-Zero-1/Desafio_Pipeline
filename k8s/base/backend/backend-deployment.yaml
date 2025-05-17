@@ -32,3 +32,13 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_PASSWORD
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: LOG_LEVEL
+            - name: TIMEZONE
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: TIMEZONE
