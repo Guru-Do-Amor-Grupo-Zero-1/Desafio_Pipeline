@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: regiinaldo/back-gurudoamor:main-${{github.sha}}
+          image: regiinaldo/back-gurudoamor:production-${{github.sha}}
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
