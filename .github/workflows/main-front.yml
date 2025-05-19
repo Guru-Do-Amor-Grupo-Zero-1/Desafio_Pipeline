@@ -1,4 +1,4 @@
-name: CI/CD para Frontend Angular (Stage)
+name: CI/CD para Frontend Angular (Production)
 
 on:
   push:
