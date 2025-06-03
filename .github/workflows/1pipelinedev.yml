@@ -17,6 +17,10 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      # PASSO DE DIAGNÓSTICO: Vai nos mostrar a estrutura de pastas real
+      - name: Listar arquivos no workspace
+        run: ls -R
+
       - name: Autenticar na Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
@@ -29,15 +33,18 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init # REMOVIDA a linha 'working-directory'
+        run: terraform init
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color # REMOVIDA a linha 'working-directory'
+        run: terraform validate -no-color
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" # REMOVIDA a linha 'working-directory'
+        run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
 
       - name: Obter IP da VM (Output)
         id: get_ip
@@ -45,7 +52,7 @@ jobs:
           IP_ADDRESS=$(terraform output -raw vm_instance_ip)
           echo "IP da VM é: $IP_ADDRESS"
           echo "ip_address=$IP_ADDRESS" >> $GITHUB_OUTPUT
-          # REMOVIDA a linha 'working-directory'
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
 
   ansible:
     name: 'Configurar VM e Deploy com Ansible'
