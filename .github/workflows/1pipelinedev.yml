@@ -1,11 +1,3 @@
-name: Deploy Infra e Aplicação
-
-on:
-  push:
-    branches:
-      - dev
-  workflow_dispatch:
-
 jobs:
   terraform:
     name: 'Provisionar Infraestrutura com Terraform'
@@ -25,22 +17,19 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.5.0 # Pode ajustar a versão se necessário
+          terraform_version: 1.5.0
 
       - name: Terraform Init
         id: init
-        run: terraform init
-        working-directory: ./terraform # Ajuste se sua pasta do terraform tiver outro nome
+        run: terraform init # REMOVIDA a linha 'working-directory'
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
-        working-directory: ./terraform
+        run: terraform validate -no-color # REMOVIDA a linha 'working-directory'
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
-        working-directory: ./terraform
+        run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}" # REMOVIDA a linha 'working-directory'
 
       - name: Obter IP da VM (Output)
         id: get_ip
@@ -48,27 +37,36 @@ jobs:
           IP_ADDRESS=$(terraform output -raw vm_instance_ip)
           echo "IP da VM é: $IP_ADDRESS"
           echo "ip_address=$IP_ADDRESS" >> $GITHUB_OUTPUT
-        working-directory: ./terraform
+          # REMOVIDA a linha 'working-directory'
 
-  ansible: #teste
+  ansible:
     name: 'Configurar VM e Deploy com Ansible'
-    needs: terraform # Garante que este job só roda após o job 'terraform'
+    needs: terraform
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      - name: Aguardar porta SSH ficar disponível
+        run: |
+          echo "Aguardando 30 segundos pela inicialização da VM e do SSH..."
+          sleep 30
+          # Adicionado um tempo de espera para a VM inicializar completamente.
+
       - name: Criar arquivo de inventário do Ansible
         run: |
           echo "[vm]" > inventory.ini
-          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=root" >> inventory.ini # Assumindo usuário root, ajuste se for diferente
-        working-directory: ./ansible # Ajuste se sua pasta do ansible tiver outro nome
+          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=root" >> inventory.ini # Verifique se 'root' é o usuário correto
+        working-directory: ./ansible # MANTIDO, pois a pasta 'ansible' existe
 
       - name: Executar o Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: playbook.yml # Nome do seu playbook principal
-          directory: ./ansible # Ajuste se sua pasta do ansible tiver outro nome
+          playbook: playbook.yml
+          directory: ./ansible # MANTIDO, pois a pasta 'ansible' existe
           inventory: inventory.ini
-          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }} # Precisamos configurar a chave SSH!
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          options: |
+            --user root
+            --extra-vars "ansible_user=root"
