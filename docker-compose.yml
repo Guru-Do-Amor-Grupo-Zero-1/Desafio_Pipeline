@@ -1,0 +1,63 @@
+version: "3.8"
+
+networks:
+  app-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+
+services:
+  backend:
+    build:
+      context: ./back  # Caminho para o backend
+    container_name: backend-container
+    ports:
+      - "5000:5000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/gurudoamor
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgre
+    depends_on:
+      db:
+        condition: service_healthy  # Esperar até o DB estar pronto
+    networks:
+      - app-network
+      - db-network
+    restart: always
+
+  frontend:
+    build:
+      context: ./front-agora  # Caminho para o frontend
+    container_name: frontend-container
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: always
+
+  db:
+    image: postgres:15
+    container_name: db-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgre
+      POSTGRES_DB: gurudoamor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistência de dados do banco
+    ports:
+      - "5432:5432"
+    networks:
+      - db-network
+      - app-network  # Adicionado para conexão com backend
+    restart: always
+    healthcheck:  # Garante que o banco de dados esteja pronto antes de iniciar o backend
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:
+    driver: local

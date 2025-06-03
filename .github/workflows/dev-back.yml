@@ -1,56 +1,56 @@
-name: CI/CD para Kubernetes (Stage)
+# name: CI/CD para Kubernetes (Stage)
 
-on:
-  push:
-    branches:
-      - dev
+# on:
+#   push:
+#     branches:
+#       - dev
 
-jobs:
-  test-build-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   test-build-deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout do código
+#         uses: actions/checkout@v3
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+#       - name: Setup Java
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: 'temurin'
+#           java-version: '17'
 
-      #- name: Rodar testes com Maven
-      #  run: mvn clean test -X -f back/pom.xml
+#       #- name: Rodar testes com Maven
+#       #  run: mvn clean test -X -f back/pom.xml
 
-      - name: Build da imagem Docker
-        run: |
-          docker build -t regiinaldo/back-gurudoamor:dev-${{github.sha}} ./back
+#       - name: Build da imagem Docker
+#         run: |
+#           docker build -t regiinaldo/back-gurudoamor:dev-${{github.sha}} ./back
 
-      - name: Login no Docker Hub
-        run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+#       - name: Login no Docker Hub
+#         run: |
+#           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Push da imagem para o Docker Hub
-        run: |
-          docker push regiinaldo/back-gurudoamor:dev-${{github.sha}}
+#       - name: Push da imagem para o Docker Hub
+#         run: |
+#           docker push regiinaldo/back-gurudoamor:dev-${{github.sha}}
 
-      - name: Autenticar no Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+#       - name: Autenticar no Google Cloud
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Instalar gcloud + kubectl
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: desafio-pipeline
-          install_components: 'kubectl'
-          export_default_credentials: true
+#       - name: Instalar gcloud + kubectl
+#         uses: google-github-actions/setup-gcloud@v2
+#         with:
+#           project_id: desafio-pipeline
+#           install_components: 'kubectl'
+#           export_default_credentials: true
 
-      - name: Acessar cluster do GKE
-        run: |
-          gcloud container clusters get-credentials cluster-desafio-pipeline \
-            --zone us-central1-a \
-            --project desafio-pipeline
-          kubectl apply -f k8s/base/ --namespace=stage
-          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n stage
+#       - name: Acessar cluster do GKE
+#         run: |
+#           gcloud container clusters get-credentials cluster-desafio-pipeline \
+#             --zone us-central1-a \
+#             --project desafio-pipeline
+#           kubectl apply -f k8s/base/ --namespace=stage
+#           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{github.sha}} -n stage
 

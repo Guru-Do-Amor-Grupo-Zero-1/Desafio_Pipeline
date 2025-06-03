@@ -1,0 +1,74 @@
+name: Deploy Infra e Aplicação
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: 'Provisionar Infraestrutura com Terraform'
+    runs-on: ubuntu-latest
+    outputs:
+      vm_ip: ${{ steps.get_ip.outputs.ip_address }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Autenticar na Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0 # Pode ajustar a versão se necessário
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./terraform # Ajuste se sua pasta do terraform tiver outro nome
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
+        working-directory: ./terraform
+
+      - name: Obter IP da VM (Output)
+        id: get_ip
+        run: |
+          IP_ADDRESS=$(terraform output -raw vm_instance_ip)
+          echo "IP da VM é: $IP_ADDRESS"
+          echo "ip_address=$IP_ADDRESS" >> $GITHUB_OUTPUT
+        working-directory: ./terraform
+
+  ansible:
+    name: 'Configurar VM e Deploy com Ansible'
+    needs: terraform # Garante que este job só roda após o job 'terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Criar arquivo de inventário do Ansible
+        run: |
+          echo "[vm]" > inventory.ini
+          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=root" >> inventory.ini # Assumindo usuário root, ajuste se for diferente
+        working-directory: ./ansible # Ajuste se sua pasta do ansible tiver outro nome
+
+      - name: Executar o Ansible Playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: playbook.yml # Nome do seu playbook principal
+          directory: ./ansible # Ajuste se sua pasta do ansible tiver outro nome
+          inventory: inventory.ini
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }} # Precisamos configurar a chave SSH!
