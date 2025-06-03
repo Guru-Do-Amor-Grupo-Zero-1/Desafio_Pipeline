@@ -59,14 +59,9 @@
       git:
         repo: 'https://github.com/Guru-Do-Amor-Grupo-Zero-1/Desafio_Pipeline'
         dest: /home/regin/app/
+        version: dev
         force: yes
-
-    - name: Esperar um momento para garantir que tudo foi clonado
-      wait_for:
-        path: /home/regin/app/docker-compose.yml
-        state: present
-        timeout: 20
-
+        
     - name: Rebuildar imagem e subir container atualizado
       shell: docker compose up -d --build
       args:
