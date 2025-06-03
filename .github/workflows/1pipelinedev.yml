@@ -50,7 +50,7 @@ jobs:
           echo "ip_address=$IP_ADDRESS" >> $GITHUB_OUTPUT
         working-directory: ./terraform
 
-  ansible:
+  ansible: #teste
     name: 'Configurar VM e Deploy com Ansible'
     needs: terraform # Garante que este job só roda após o job 'terraform'
     runs-on: ubuntu-latest
