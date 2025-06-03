@@ -1,3 +1,11 @@
+name: Deploy Infra e Aplicação
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
 jobs:
   terraform:
     name: 'Provisionar Infraestrutura com Terraform'
