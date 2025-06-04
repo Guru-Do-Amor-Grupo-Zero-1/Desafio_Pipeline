@@ -85,6 +85,8 @@ jobs:
         working-directory: ./ansible
         
       - name: Executar Ansible Playbook manualmente
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
         run: |
           ansible-playbook playbook.yml \
             --inventory inventory.ini \
