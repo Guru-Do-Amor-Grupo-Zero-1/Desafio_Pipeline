@@ -65,5 +65,5 @@
     - name: Rebuildar imagem e subir container atualizado
       shell: docker compose up -d --build
       args:
-        chdir: /home/josim/app
+        chdir: /home/josim/app #teste
   
