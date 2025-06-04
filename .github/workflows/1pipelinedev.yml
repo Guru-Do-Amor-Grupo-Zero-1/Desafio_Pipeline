@@ -70,7 +70,7 @@ jobs:
 
       - name: Criar arquivo de inventário do Ansible
         run: |
-          echo "[backend]" > inventory.ini
+          echo "[vm]" > inventory.ini
           echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=regin" >> inventory.ini
           echo "Inventário criado:"
           cat inventory.ini
