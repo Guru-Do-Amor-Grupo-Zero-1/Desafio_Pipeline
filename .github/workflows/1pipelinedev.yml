@@ -56,7 +56,7 @@ jobs:
 
   ansible:
     name: 'Configurar VM e Deploy com Ansible'
-    needs: terraform
+    needs: terraform # Garante que este job só roda após o job 'terraform'
     runs-on: ubuntu-latest
 
     steps:
@@ -67,21 +67,22 @@ jobs:
         run: |
           echo "Aguardando 30 segundos pela inicialização da VM e do SSH..."
           sleep 30
-          # Adicionado um tempo de espera para a VM inicializar completamente.
 
       - name: Criar arquivo de inventário do Ansible
         run: |
-          echo "[vm]" > inventory.ini
-          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=root" >> inventory.ini # Verifique se 'root' é o usuário correto
-        working-directory: ./ansible # MANTIDO, pois a pasta 'ansible' existe
+          echo "[backend]" > inventory.ini
+          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=regin" >> inventory.ini
+          echo "Inventário criado:"
+          cat inventory.ini
+        working-directory: ./ansible
 
       - name: Executar o Ansible Playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: playbook.yml
-          directory: ./ansible # MANTIDO, pois a pasta 'ansible' existe
-          inventory: inventory.ini
+          directory: ./ansible
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          inventory: inventory.ini
           options: |
-            --user root
-            --extra-vars "ansible_user=root"
+            --user regin
+            --extra-vars "ansible_user=regin"
