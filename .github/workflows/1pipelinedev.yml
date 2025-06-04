@@ -43,11 +43,11 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: > # Usando '>' para múltiplas linhas
+        run: > # Usando '>' para múltiplas linhass
           terraform apply -auto-approve
           -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
           -var="ssh_pub_key=${{ secrets.GCP_SSH_PUBLIC_KEY }}" # <-- ADICIONE ESTA LINHA
-          
+
         working-directory: ./AtividadeSemanalTerraform
       - name: Obter IP da VM (Output)
         id: get_ip
