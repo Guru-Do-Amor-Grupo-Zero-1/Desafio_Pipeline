@@ -1,6 +1,6 @@
 ---
 - name: Configurar e fazer deploy da aplicação
-  hosts: backend
+  hosts: vm
   become: true
 
   tasks:
