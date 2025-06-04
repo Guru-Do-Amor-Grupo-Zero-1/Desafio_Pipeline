@@ -92,7 +92,7 @@ jobs:
           chmod 600 .ansible_key
         working-directory: ./ansible
         
-      - name: Executar Ansible Playbook manualmente
+      - name: Executar Ansible Playbook manualmente #teste
         run: |
           ansible-playbook playbook.yml \
             --inventory inventory.ini \
