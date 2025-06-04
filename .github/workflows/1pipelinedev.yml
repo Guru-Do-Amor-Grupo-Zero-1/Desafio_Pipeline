@@ -68,35 +68,24 @@ jobs:
           echo "Aguardando 30 segundos pela inicialização da VM e do SSH..."
           sleep 30
 
-      # --- NOVOS PASSOS DE DIAGNÓSTICO E EXECUÇÃO ---
-
       - name: Criar arquivo de inventário do Ansible
         run: |
           echo "Criando o arquivo inventory.ini com o grupo [vm]..."
           echo "[vm]" > inventory.ini
-          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=regin" >> inventory.ini
+          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=josim" >> inventory.ini # ALTERADO para josim
         working-directory: ./ansible
 
-      - name: Verificar arquivos antes de executar
-        run: |
-          echo "--- Conteúdo do diretório 'ansible':"
-          ls -la ./ansible
-          echo "--- Conteúdo do playbook.yml que será usado:"
-          cat ./ansible/playbook.yml
-          echo "--- Conteúdo do inventory.ini que será usado:"
-          cat ./ansible/inventory.ini
-      
       - name: Criar e proteger a chave SSH
         run: |
           echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > .ansible_key
           chmod 600 .ansible_key
         working-directory: ./ansible
         
-      - name: Executar Ansible Playbook manualmente #teste
+      - name: Executar Ansible Playbook manualmente
         run: |
           ansible-playbook playbook.yml \
             --inventory inventory.ini \
             --private-key .ansible_key \
-            --user regin \
+            --user josim \
             -v
-        working-directory: ./ansible
+        working-directory: ./ansible # ALTERADO para josim

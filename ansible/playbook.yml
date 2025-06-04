@@ -52,18 +52,18 @@
     - name: Parar container antigo (se existir)
       shell: docker compose down
       args:
-        chdir: /home/regin/app
+        chdir: /home/josim/app
       ignore_errors: true
 
     - name: Clonar repositório do projeto
       git:
         repo: 'https://github.com/Guru-Do-Amor-Grupo-Zero-1/Desafio_Pipeline'
-        dest: /home/regin/app/
+        dest: /home/josim/app/
         version: dev
         force: yes
         
     - name: Rebuildar imagem e subir container atualizado
       shell: docker compose up -d --build
       args:
-        chdir: /home/regin/app
+        chdir: /home/josim/app
   
