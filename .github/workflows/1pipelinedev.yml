@@ -56,9 +56,9 @@ jobs:
 
   ansible:
     name: 'Configurar VM e Deploy com Ansible'
-    needs: terraform # Garante que este job só roda após o job 'terraform'
+    needs: terraform
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -68,21 +68,35 @@ jobs:
           echo "Aguardando 30 segundos pela inicialização da VM e do SSH..."
           sleep 30
 
+      # --- NOVOS PASSOS DE DIAGNÓSTICO E EXECUÇÃO ---
+
       - name: Criar arquivo de inventário do Ansible
         run: |
+          echo "Criando o arquivo inventory.ini com o grupo [vm]..."
           echo "[vm]" > inventory.ini
           echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=regin" >> inventory.ini
-          echo "Inventário criado:"
-          cat inventory.ini
         working-directory: ./ansible
 
-      - name: Executar o Ansible Playbook
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          playbook: playbook.yml
-          directory: ./ansible
-          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
-          inventory: inventory.ini
-          options: |
-            --user regin
-            --extra-vars "ansible_user=regin"
+      - name: Verificar arquivos antes de executar
+        run: |
+          echo "--- Conteúdo do diretório 'ansible':"
+          ls -la ./ansible
+          echo "--- Conteúdo do playbook.yml que será usado:"
+          cat ./ansible/playbook.yml
+          echo "--- Conteúdo do inventory.ini que será usado:"
+          cat ./ansible/inventory.ini
+      
+      - name: Criar e proteger a chave SSH
+        run: |
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > .ansible_key
+          chmod 600 .ansible_key
+        working-directory: ./ansible
+        
+      - name: Executar Ansible Playbook manualmente
+        run: |
+          ansible-playbook playbook.yml \
+            --inventory inventory.ini \
+            --private-key .ansible_key \
+            --user regin \
+            -v
+        working-directory: ./ansible
