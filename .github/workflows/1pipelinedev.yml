@@ -1,0 +1,96 @@
+name: Deploy Infra e Aplicação
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: 'Provisionar Infraestrutura com Terraform'
+    runs-on: ubuntu-latest
+    outputs:
+      vm_ip: ${{ steps.get_ip.outputs.ip_address }}
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # PASSO DE DIAGNÓSTICO: Vai nos mostrar a estrutura de pastas real
+      - name: Listar arquivos no workspace
+        run: ls -R
+
+      - name: Autenticar na Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
+
+      - name: Terraform Apply
+        id: apply
+        run: > # Usando '>' para múltiplas linhass
+          terraform apply -auto-approve
+          -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
+          -var="ssh_pub_key=${{ secrets.GCP_SSH_PUBLIC_KEY }}" # <-- ADICIONE ESTA LINHA
+
+        working-directory: ./AtividadeSemanalTerraform
+      - name: Obter IP da VM (Output)
+        id: get_ip
+        run: |
+          IP_ADDRESS=$(terraform output -raw vm_instance_ip)
+          echo "IP da VM é: $IP_ADDRESS"
+          echo "ip_address=$IP_ADDRESS" >> $GITHUB_OUTPUT
+        working-directory: ./AtividadeSemanalTerraform # CORRIGIDO: Caminho correto
+
+  ansible:
+    name: 'Configurar VM e Deploy com Ansible'
+    needs: terraform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Aguardar porta SSH ficar disponível
+        run: |
+          echo "Aguardando 30 segundos pela inicialização da VM e do SSH..."
+          sleep 30
+
+      - name: Criar arquivo de inventário do Ansible
+        run: |
+          echo "Criando o arquivo inventory.ini com o grupo [vm]..."
+          echo "[vm]" > inventory.ini
+          echo "${{ needs.terraform.outputs.vm_ip }} ansible_user=josim" >> inventory.ini # ALTERADO para josim
+        working-directory: ./ansible
+
+      - name: Criar e proteger a chave SSH
+        run: |
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > .ansible_key
+          chmod 600 .ansible_key
+        working-directory: ./ansible
+        
+      - name: Executar Ansible Playbook manualmente
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          ansible-playbook playbook.yml \
+            --inventory inventory.ini \
+            --private-key .ansible_key \
+            --user josim \
+            -v
+        working-directory: ./ansible # ALTERADO para josim
