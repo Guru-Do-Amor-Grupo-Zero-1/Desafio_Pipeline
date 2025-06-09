@@ -69,7 +69,7 @@
 
     - name: Copiar prometheus.yml 
       copy:
-        src: arquivos/prometheus.yml
+        src: ../prometheus.yml
         dest: /home/josim/app/prometheus.yml
 
   
