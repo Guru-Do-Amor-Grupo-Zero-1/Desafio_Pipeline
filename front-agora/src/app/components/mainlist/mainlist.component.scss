@@ -3,42 +3,58 @@ body {
     background-color: #fce4e4;
     text-align: center;
     padding-top: 90px;
-    
+    margin: 0px;
 }
 
-
-
 .container {
-    width: 100%;
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem;
+}
+.form-box {
+  max-width: 33%;
+  flex: 1 1 auto; /* para permitir que encolha e cresça */
+  box-sizing: border-box; /* para incluir padding na largura total */
 }
 
 .box {
-    background: #e48b8b;
-    padding: 30px;
-    border-radius: 20px;
-    margin: 40px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  flex: 1 1 32%;
+  background: #e48b8b;
+  padding: 30px;
+  border-radius: 40px;
+  margin: 20px 0;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
-.form-box, .users-box, .history-box {
+.form-box,.meio .history-box {
     flex: 1;
-    max-width: 30%;
-    padding: 20px;
+    padding: 25px;
+    max-width: 33%;
 }
-
+.history-box
+{
+  max-width: 33%;
+}
 .users-box {
-    flex: 1;
-    max-width: 40%; /* Permite que o container dos usuários ocupe mais espaço */
-    padding: 20px;
-    box-sizing: border-box;
-    margin-top: 150px; /* Remove a margem superior para separar mais dos outros containers */
-    margin-bottom: 200px; /* Adiciona um espaçamento inferior para distanciar dos outros */
-    
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 0; /* remova essa margem grande que empurra pra baixo */
+  flex-grow: 1; /* faz a div crescer e ocupar o máximo possível */
+  
 }
+
+
+.meio {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* espaçamento vertical */
+  max-width: 33%;
+}
+
+
 .polyline {
     display: none; /* Isso ocultará o elemento */
   }
@@ -52,13 +68,16 @@ input, button {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+.usucada
+{
+  max-width: 95%;
+}
 
 .signo-container {
     display: grid;
     grid-template-columns: repeat(6, 1fr); /* 6 colunas */
     gap: 20px; /* Espaçamento entre os itens */
     justify-items: center;
-    max-width: 600px; /* Define um limite para o container */
     margin: 0 auto; /* Centraliza na tela */
   }
 
@@ -82,7 +101,7 @@ input, button {
     cursor: pointer;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
   }
   
   .signo-item:hover {
@@ -109,6 +128,7 @@ input, button {
     display: flex;
     gap: 40px; /* Espaço entre os inputs */
     margin-right: 5px;
+    margin-left: 5px;
     margin-top: 25px;
 }
 
@@ -160,16 +180,11 @@ h2 {
 
 .button-container {
     display: flex;
-    justify-content: center;
-    position: absolute;
-    top: 25%; /* Alinha os botões no centro verticalmente */
-    left: 51%; /* Centraliza horizontalmente */
-    transform: translate(-50%, -50%); /* Centraliza exatamente no meio */
-    z-index: 10; /* Garante que os botões fiquem na frente das outras divs */
+
 }
 
 .button-container button {
-    margin: 30px; /* Espaçamento entre os botões */
+    margin: 10px; /* Espaçamento entre os botões */
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -246,7 +261,6 @@ label {
     object-fit: contain; /* Garante que a imagem seja dimensionada sem distorção */
 }
 #sabsigno {
-    display: block;
     margin: 0 auto; /* Centraliza horizontalmente */
     padding: 10px 20px;
     background-color: #F6E4E4;
@@ -254,7 +268,7 @@ label {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 45%; 
+    width: 65%; 
 }
 #dataEscolhida {
     display: block;
@@ -279,45 +293,23 @@ label {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 45%; 
+    width: 65%; 
 }
 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #e48b8b;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    font-size: 24px;
-    font-family: 'Inter', sans-serif;
-    font-weight: bold;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    height: 10%;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  }
-  
-  .header.hidden {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
 
 .footer {
-    display: none; 
-    position: fixed;  
-    left: 0;
-    bottom: 0;
-    height: 3%;
-    width: 100%;
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    z-index: 1000;  
+  position: fixed;  
+  left: 0;
+  bottom: 0;
+  height: auto;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;  
 }
+
 
 .footer p {
     margin: 0;
@@ -523,14 +515,7 @@ label {
 
   
   
-  /* Modal Header */
-  .modal-header {
-    font-size: 1.8rem; /* Aumenta o tamanho da fonte */
-    font-weight: bold;
-    margin-bottom: 20px; /* Aumenta o espaço entre o título e o conteúdo */
-    color: #333;
-  }
-  
+
   /* Modal Body */
   .modal-body {
     font-size: 1.1rem; /* Aumenta o tamanho da fonte */
@@ -719,7 +704,6 @@ label {
   
   /* Estilização do Input */
   .history-box input {
-    width: 90%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
@@ -784,3 +768,120 @@ label {
     color: #222;
 
   }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fce4e4;
+    color: white;
+    display: flex;                /* ativa flexbox */
+    justify-content: space-between; /* espaço entre esquerda e direita */
+    align-items: center;          /* centraliza verticalmente */
+    padding: 0 20px;              /* espaçamento horizontal */
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    height: 70px;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  
+  .header-left h1 {
+    font-size: 24px;
+    margin: 0;                   /* tira margem padrão do h1 */
+  }
+  
+  .header-right button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: bold;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+  }
+  
+  .header-right button:hover {
+    color: #d35d5d;
+  }
+  
+  .header.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    margin: 2%;
+  }
+  .headi {
+    font-family: 'Sansita Swashed', cursive;
+    color: #3b3b3b;
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .logo-icon {
+    font-size: 30px;
+    margin-right: 10px;
+    color: #000000;
+  }
+  .bheadi
+  {
+    color: #3b3b3b;
+  }
+  button.round-btn {
+    background-color: #e48b8b !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 25px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 6px rgba(228, 139, 139, 0.5);
+    margin-right: 20px;
+  }
+  
+
+.round-btn:hover {
+  background-color: #d17272; /* tom mais escuro no hover */
+}
+.header-links {
+  display: flex;
+  gap: 20px; /* Espaço de 20px entre os links */
+  margin-right: 20px;
+}
+.header-link:not(:last-child) {
+  margin-right: 20px;
+}
+.header-link {
+  text-decoration: none;
+  color: black;      /* cor preta, por exemplo */
+  cursor: default;
+}
+/* Aplica ao navegador baseado em WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Fundo quase invisível */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(154, 111, 194, 0.3); /* Cor roxa transparente */
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(154, 111, 194, 0.3) transparent;
+}

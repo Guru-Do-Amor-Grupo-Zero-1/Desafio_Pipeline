@@ -4,37 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Usuários</title>
-  <link rel="stylesheet" href="styles.scss"> <!-- Adicione seu arquivo CSS -->
+  <link rel="stylesheet" href="styles.css"> <!-- Adicione seu arquivo CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 <body>
   <div class="body">
-  
     <header class="header" [class.hidden]="!isHeaderVisible">
-
-      <h1>Cadastro de Usuarios</h1>
-
+      <div class="header-left" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-heart-circle-bolt" style="color:#e48b8b; font-size:32px; margin-right: 10px;"></i>
+        <h1 class="headi">Cadastro de Usuários</h1>
+      </div>
+    
+      <div class="header-right">
+        <nav class="header-links">
+          <a href="#" class="header-link">Home</a>
+          <a href="#" class="header-link">Menu</a>
+          <a href="#" class="header-link">Sobre</a>
+        </nav>
+        <button class="round-btn">Apoie-nos</button>
+      </div>
     </header>
     
-    <div class="button-container">
-      <!-- Botão para abrir a modal de Compatibilidade Normal -->
-      <button title="Será que pode encontrar o amor da sua vida?" 
-              class="rosa" (click)="abrirModal('modalCompatibilidade')">
-        Teste sua Compatibilidade
-      </button>
-    
-      <!-- Botão para abrir a modal de Compatibilidade com Signos -->
-      <button title="Deixe as estrelas ditarem seu futuro!!"  
-              class="azul" (click)="abrirModal('modalSignos')">
-        Compatibilidade com Signos!!
-      </button>
-    </div>
-
-      <div id="modalSignos" class="modal-overlay" (click)="fecharModal('modalSignos')">
+     <div id="modalSignos" class="modal-overlay" (click)="fecharModal('modalSignos')">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <span class="close" (click)="fecharModal('modalSignos')">&times;</span>
           <h2>Compatibilidade com Signos</h2>
           <p>Descubra se seus signos combinam!</p>
-      
           <div class="compatibilidade-container">
             <div class="usuario-container">
               <h3 id="tittle">Usuário 1</h3>
@@ -45,7 +43,6 @@
                 </option>
               </select>
             </div>
-      
             <div class="botao-container">
               <button (click)="verificarCompatibilidade()">
                 <span class="estrela" [ngClass]="{'cheio': compatibilidadeSignos >= 50, 'vazio': compatibilidadeSignos < 50}">
@@ -54,8 +51,7 @@
                 Testar Compatibilidade
               </button>
             </div>
-      
-            <div class="usuario-container">
+           <div class="usuario-container">
               <h3 id="tittle">Usuário 2</h3>
               <input type="text" [(ngModel)]="searchNome2" placeholder="Pesquisar Usuário 2..." class="search-input" />
               <select (change)="selecionarUsuario($event, 'usuario2')" class="usuario-select">
@@ -64,8 +60,7 @@
                 </option>
               </select>
             </div>
-          </div>
-      
+          </div>  
           <div class="resultado-container" *ngIf="matchResponse">
             <h3>Resultado da Compatibilidade</h3>
             <p><strong>Usuário 1:</strong> {{ matchResponse.usuario1 }}</p>
@@ -75,17 +70,13 @@
             <p><strong>Mensagem:</strong> {{ matchResponse.mensagem }}</p>
             <p><strong>Distância:</strong> {{ matchResponse.distancia }}</p>
           </div>
-      
           <button class="close-btn" (click)="fecharModal('modalSignos')">Fechar</button>
         </div>
       </div>
-    
-
       <div id="modalCompatibilidade" class="modal-overlay" (click)="fecharModal('modalCompatibilidade')">
         <div class="modal-content" (click)="$event.stopPropagation()">
           <span class="close" (click)="fecharModal('modalCompatibilidade')">&times;</span>
-          <h2>Teste sua Compatibilidade</h2>
-          
+          <h2>Teste sua Compatibilidade</h2>     
           <!-- Área de seleção dos usuários permanece para a pesquisa -->
           <div class="compatibilidade-container">
             <div class="usuario-container">
@@ -96,8 +87,7 @@
                   {{ usuario.nomeUsuario }}
                 </option>
               </select>
-            </div>
-            
+            </div>      
             <div class="botao-container">
               <button (click)="verificarCompatibilidade()">
                 <span class="coracao" [ngClass]="{'cheio': compatibilidade >= 50, 'vazio': compatibilidade < 50}">
@@ -105,8 +95,7 @@
                 </span>
                 Testar Compatibilidade
               </button>
-            </div>
-            
+            </div>     
             <div class="usuario-container">
               <h3 id="tittle">Usuário 2</h3>
               <input type="text" [(ngModel)]="searchNome2" placeholder="Pesquisar Usuário 2..." class="search-input" />
@@ -116,25 +105,18 @@
                 </option>
               </select>
             </div>
-          </div>
-          
+          </div>    
           <!-- Resultado exibindo somente a porcentagem da compatibilidade e a distância -->
           <div class="resultado-container">
             <h3>Resultado da Compatibilidade</h3>
             <p><strong>Compatibilidade:</strong> {{ compatibilidadeResultado }}</p>
             <p><strong>Distância do seu parceiro:</strong> {{ distancia }}</p>
-          </div>
-          
+          </div>     
           <button class="close-btn" (click)="fecharModal('modalCompatibilidade')">Fechar</button>
         </div>
       </div>
       
-    
-    
-    
-    
-    
-    
+ 
     <div class="container">
       <div class="box form-box">
         <h2>Cadastre seu Usuário</h2>
@@ -165,10 +147,23 @@
         <!-- Botão para cadastrar o usuário -->
         <button id="cadastrar" (click)="cadastrarUsuario()">Cadastrar Usuário</button>
       </div>    
-      <div class="box users-box">
+      <div class="meio">
+        <div class="button-container">
+          <!-- Botão para abrir a modal de Compatibilidade Normal -->
+          <button title="Será que pode encontrar o amor da sua vida?" 
+                  class="rosa" (click)="abrirModal('modalCompatibilidade')">
+            Teste sua Compatibilidade
+          </button>   
+          <!-- Botão para abrir a modal de Compatibilidade com Signos -->
+          <button title="Deixe as estrelas ditarem seu futuro!!"  
+                  class="azul" (click)="abrirModal('modalSignos')">
+            Compatibilidade com Signos!!
+          </button>
+        </div>
+        <div class="box users-box">
         <h2>Usuários Cadastrados</h2>
         <!-- Campo de busca para filtrar os usuários -->
-        <input type="text" [(ngModel)]="searchNome" (input)="onSearch()" placeholder="Pesquisar usuário">
+        <input class="usucada" type="text" [(ngModel)]="searchNome" (input)="onSearch()" placeholder="Pesquisar usuário">
 
         <div id="users-list" class="scroll-container">
           <div *ngFor="let usuario of filterUsuarios()" class="user-card">
@@ -181,11 +176,12 @@
               <p><strong>Endereço:</strong> {{ usuario.endereco }}, Nº {{ usuario.numero }} - CEP: {{ usuario.cep }}</p>
             </div>
           </div>
+          </div>
         </div>
       </div>   
       <div class="box history-box">
         <h2>Histórico</h2>
-        <input type="text" placeholder="Pesquise pelo nome" [(ngModel)]="searchNome">
+        <input class="usucada"type="text" placeholder="Pesquise pelo nome" [(ngModel)]="searchNome">
         <div id="history-list" class="scroll-container">
           <div *ngFor="let match of filterMatchs()" class="match-card">
             <div class="match-info">
@@ -200,9 +196,11 @@
       </div>
     </div>
   
-    <footer class="footer">
+    <footer *ngIf="isFooterVisible" class="footer">
       <p>&copy; 2025 Cadastro de Usuários. Todos os direitos reservados.</p>
     </footer>
+    
   </div>
+  
 </body>
 </html>

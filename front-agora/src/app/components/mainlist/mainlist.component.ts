@@ -5,7 +5,6 @@ import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario.model';
 import { MatchService } from '../../services/match.service';
 import { MatchResponse } from '../../models/match.mode';
-import { MainlistModule } from './mainlist.module';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-mainlist',
@@ -91,12 +90,21 @@ export class MainlistComponent implements OnInit {
       }
     );
   }
+  isFooterVisible: boolean = false;
 
-  @HostListener('window:scroll', [] )
-  onScroll(): void {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    this.isHeaderVisible = currentScroll === 0;
-  }
+  @HostListener('window:scroll', [])
+onScroll(): void {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const windowHeight = window.innerHeight;
+  const fullHeight = document.documentElement.scrollHeight;
+
+  // Se o scroll + altura da janela >= altura total da página, então estamos no final
+  this.isFooterVisible = scrollTop + windowHeight >= fullHeight - 10;
+
+  // Se quiser esconder o header quando descer
+  this.isHeaderVisible = scrollTop === 0;
+}
+
 
   selecionarSigno(signo: string): void {
     this.selectedSigno = signo;
