@@ -6,7 +6,7 @@ provider "google" {
 
 # Firewall para permitir acesso ao cluster e apps (HTTP/Grafana/etc.)
 resource "google_compute_firewall" "gke_firewall" {
-  name = "gke-firewall-${var.environment}"  # var.environment = "stage" ou "dev"
+  name    = "gke-firewall-${var.environment}"
   network = "gke-network-v2"
   allow {
     protocol = "tcp"
