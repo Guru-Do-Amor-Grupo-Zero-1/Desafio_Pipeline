@@ -6,7 +6,12 @@ provider "google" {
 
 # Criação de rede para o cluster
 resource "google_compute_network" "k8s_network" {
-  name = "gke-network"
+  name                    = "gke-network"
+  auto_create_subnetworks = true
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Firewall para permitir acesso ao cluster e apps (inclui HTTP/Grafana/etc.) d
