@@ -9,7 +9,7 @@ resource "google_compute_network" "k8s_network" {
   name = "gke-network"
 }
 
-# Firewall para permitir acesso ao cluster e apps (inclui HTTP/Grafana/etc.)
+# Firewall para permitir acesso ao cluster e apps (inclui HTTP/Grafana/etc.) d
 resource "google_compute_firewall" "gke_firewall" {
   name    = "gke-firewall"
   network = google_compute_network.k8s_network.name
