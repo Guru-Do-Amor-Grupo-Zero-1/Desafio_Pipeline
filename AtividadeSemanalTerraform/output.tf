@@ -1,3 +1,4 @@
-output "instance_ip" {
-  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
+output "cluster_endpoint" {
+  description = "Endpoint do cluster Kubernetes GKE"
+  value       = google_container_cluster.primary.endpoint
 }
