@@ -50,7 +50,3 @@ resource "google_container_node_pool" "primary_nodes" {
   node_count = 1
 }
 
-# Output para IP de acesso (se quiser usar mais tarde)
-output "cluster_endpoint" {
-  value = google_container_cluster.primary.endpoint
-}
