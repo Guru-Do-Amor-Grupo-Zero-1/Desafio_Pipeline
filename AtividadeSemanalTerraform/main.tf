@@ -6,7 +6,7 @@ provider "google" {
 
 # Criação de rede para o cluster
 resource "google_compute_network" "k8s_network" {
-  name                    = "gke-network"
+  name                    = "gke-network-v2"
   auto_create_subnetworks = true
 
   lifecycle {
