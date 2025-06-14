@@ -4,21 +4,10 @@ provider "google" {
   zone    = var.zone
 }
 
-# Criação de rede para o cluster
-resource "google_compute_network" "k8s_network" {
-  name                    = "gke-network-v2"
-  auto_create_subnetworks = true
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
 # Firewall para permitir acesso ao cluster e apps (HTTP/Grafana/etc.)
 resource "google_compute_firewall" "gke_firewall" {
   name    = "gke-firewall-v2"
-  network = google_compute_network.k8s_network.name
-
+  network = gke-network-v2
   allow {
     protocol = "tcp"
     ports    = ["22", "80", "443", "3000", "9090", "5000"]
@@ -35,7 +24,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  network    = google_compute_network.k8s_network.name
+  network    = gke-network-v2
   subnetwork = null
 }
 
