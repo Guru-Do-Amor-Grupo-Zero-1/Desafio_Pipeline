@@ -14,6 +14,11 @@ resource "google_compute_firewall" "gke_firewall" {
   }
 
   source_ranges = ["0.0.0.0/0"]
+
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [name] # evita recriação forçada
+  }
 }
 
 # Cluster GKE (FALTAVA ESTE BLOCO!)
@@ -23,6 +28,11 @@ resource "google_container_cluster" "primary" {
 
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  node_config {
+    disk_type    = "pd-standard"
+    disk_size_gb = 10
+  }
 
   network    = "gke-network-v2"
   subnetwork = null
