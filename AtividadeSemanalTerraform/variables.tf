@@ -8,3 +8,7 @@ variable "zone" {
 variable "cluster_name" {
   default = "cluster-entrega"
 }
+variable "environment" {
+  type    = string
+  default = "stage"
+}
