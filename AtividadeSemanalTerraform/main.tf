@@ -17,7 +17,7 @@ resource "google_compute_firewall" "gke_firewall" {
 
   lifecycle {
     prevent_destroy = false
-    ignore_changes = [name] # evita recriação forçada
+    ignore_changes = [name] # evita recriação forçada s
   }
 }
 
