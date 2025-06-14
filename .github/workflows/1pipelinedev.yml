@@ -36,6 +36,9 @@ jobs:
         run: terraform init
         working-directory: ./AtividadeSemanalTerraform
 
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
+
       - name: Terraform Apply
         run: >
           terraform apply -auto-approve
