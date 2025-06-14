@@ -14,9 +14,9 @@ resource "google_compute_network" "k8s_network" {
   }
 }
 
-# Firewall para permitir acesso ao cluster e apps (inclui HTTP/Grafana/etc.) d
+# Firewall para permitir acesso ao cluster e apps (HTTP/Grafana/etc.)
 resource "google_compute_firewall" "gke_firewall" {
-  name    = "gke-firewall-v2" # ou importe o existente
+  name    = "gke-firewall-v2"
   network = google_compute_network.k8s_network.name
 
   allow {
@@ -27,6 +27,19 @@ resource "google_compute_firewall" "gke_firewall" {
   source_ranges = ["0.0.0.0/0"]
 }
 
+# Cluster GKE (FALTAVA ESTE BLOCO!)
+resource "google_container_cluster" "primary" {
+  name     = var.cluster_name
+  location = var.region
+
+  remove_default_node_pool = true
+  initial_node_count       = 1
+
+  network    = google_compute_network.k8s_network.name
+  subnetwork = null
+}
+
+# Node pool
 resource "google_container_node_pool" "primary_nodes" {
   name     = "primary-node-pool"
   location = var.region
@@ -34,7 +47,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     machine_type = "e2-medium"
-    disk_type    = "pd-standard" # <== Essencial para evitar o erro de quota
+    disk_type    = "pd-standard"
     disk_size_gb = 50
 
     oauth_scopes = [
