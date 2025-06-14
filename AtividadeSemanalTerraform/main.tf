@@ -6,7 +6,7 @@ provider "google" {
 
 # Firewall para permitir acesso ao cluster e apps (HTTP/Grafana/etc.)
 resource "google_compute_firewall" "gke_firewall" {
-  name    = "gke-firewall-v2"
+  name = "gke-firewall-${var.environment}"  # var.environment = "stage" ou "dev"
   network = "gke-network-v2"
   allow {
     protocol = "tcp"
@@ -47,7 +47,7 @@ resource "google_container_node_pool" "primary_nodes" {
   node_config {
     machine_type = "e2-medium"
     disk_type    = "pd-standard"
-    disk_size_gb = 10
+    disk_size_gb = 12
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
