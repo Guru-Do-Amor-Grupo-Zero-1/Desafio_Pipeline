@@ -10,7 +10,7 @@ variable "zone" {
   default = "us-central1-a"
 }
 variable "cluster_name" {
-  default = "cluster-entrega-zero1"
+  default = "cluster-entrega"
 }
 variable "environment" {
   type    = string
