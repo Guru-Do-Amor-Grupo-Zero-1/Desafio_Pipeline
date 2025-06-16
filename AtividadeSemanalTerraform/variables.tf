@@ -1,4 +1,8 @@
-variable "project_id" {}
+variable "project_id" {
+  description = "cluster-mensal-grupo-zero1"
+  type = string
+}
+
 variable "region" {
   default = "us-central1"
 }
