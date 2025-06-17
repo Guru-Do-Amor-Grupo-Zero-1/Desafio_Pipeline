@@ -36,11 +36,11 @@ jobs:
         run: terraform init
         working-directory: ./AtividadeSemanalTerraform 
 
-      # - name: Deletar cluster
-      #   run: |
-      #     gcloud container clusters delete cluster-entrega-prod \
-      #       --region us-central1 \
-      #       --quiet || echo "Cluster já estava deletado ou não existe"
+      - name: Deletar cluster
+        run: |
+          gcloud container clusters delete cluster-entrega-prod \
+            --region us-central1 \
+            --quiet || echo "Cluster já estava deletado ou não existe"
 
       - name: Terraform Apply
         run: >
@@ -73,7 +73,7 @@ jobs:
 
       - name: Aplicar manifests
         run: |
-          kubectl apply -f k8s/base/ --namespace=production
+          kubectl apply -f k8s/production/ --namespace=production
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:main-${{ github.sha }} -n production
           kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:main-${{ github.sha }} -n production
 
