@@ -39,8 +39,8 @@ jobs:
       - name: Deletar cluster
         run: |
           gcloud container clusters delete cluster-entrega-prod \
-           --region us-central1 \
-           --quiet || echo "Cluster já estava deletado ou não existe"
+            --region us-central1 \
+            --quiet || echo "Cluster já estava deletado ou não existe"
 
       - name: Terraform Apply
         run: >
