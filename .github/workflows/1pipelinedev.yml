@@ -51,7 +51,7 @@ jobs:
       - name: Build da imagem Docker do backend
         run: |
           docker build -t regiinaldo/back-gurudoamor:dev-${{ github.sha }} ./back
-          docker build -t regiinaldo/front-gurudoamor:dev-${{ github.sha }} ./front
+          docker build -t regiinaldo/front-gurudoamor:dev-${{ github.sha }} ./front-agora
 
       - name: Login no Docker Hub
         run: |
@@ -74,3 +74,4 @@ jobs:
         run: |
           kubectl apply -f k8s/base/ --namespace=stage
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
+          kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:dev-${{ github.sha }} -n stage
