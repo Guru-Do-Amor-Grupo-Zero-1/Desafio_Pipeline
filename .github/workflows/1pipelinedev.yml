@@ -71,6 +71,9 @@ jobs:
       - name: Criar namespace stage
         run: kubectl create namespace stage || echo "Namespace já existe"
 
+      - name: Criar namespace monitoring
+        run: kubectl create namespace monitoring || echo "Namespace já existe"
+
       - name: Aplicar manifests
         run: |
           kubectl apply -f k8s/base/ --namespace=stage
