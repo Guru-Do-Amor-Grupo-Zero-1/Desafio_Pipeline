@@ -20,7 +20,7 @@ resource "google_container_cluster" "primary" {
   network  = "gke-network-v2"
 
   remove_default_node_pool = true
-  initial_node_count       = 1
+  initial_node_count       = 0
   deletion_protection      = false
 
   lifecycle {
