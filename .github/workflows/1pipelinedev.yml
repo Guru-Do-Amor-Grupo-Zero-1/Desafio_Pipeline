@@ -77,8 +77,10 @@ jobs:
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
           kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:dev-${{ github.sha }} -n stage
 
-               - name: Setup Helm
+      - name: Setup Helm
         uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
 
       - name: Adicionar repositório Prometheus Community
         run: |
