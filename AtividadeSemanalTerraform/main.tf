@@ -14,32 +14,25 @@ provider "google" {
   zone    = var.zone
 }
 
+# Definição do Cluster limpa e correta
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
+  network  = "gke-network-v2"
 
-  deletion_protection = false
-
+  # Diz para não criar o pool de nós padrão.
+  # As configurações de initial_node_count e node_config foram removidas daqui.
   remove_default_node_pool = true
-  initial_node_count       = 1
-
-  node_config {
-    disk_type    = "pd-standard"
-    disk_size_gb = 12
-  }
-
-  network    = "gke-network-v2"
-  subnetwork = null
+  
+  # A linha abaixo é importante, mas o problema real está na GUI do GCP.
+  deletion_protection = false
 }
 
 # Node pool
 resource "google_container_node_pool" "primary_nodes" {
-  name     = "primary-node-pool"
-  
-  # CORRIGIDO: A localização do node pool agora corresponde à do cluster
-  location = google_container_cluster.primary.location
-  
+  name       = "primary-node-pool"
   cluster    = google_container_cluster.primary.name
+  location   = google_container_cluster.primary.location
   node_count = 1
 
   node_config {
