@@ -1,0 +1,162 @@
+{
+  "id": null,
+  "title": "K8s Cluster - Basic + Extended Metrics",
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 2,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "gauge",
+      "title": "CPU Usage (%)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 }
+    },
+    {
+      "type": "gauge",
+      "title": "Memory Usage (%)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 }
+    },
+    {
+      "type": "stat",
+      "title": "Pod Status: Running / Pending / Failed",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(kube_pod_status_phase{phase=\"Running\"})",
+          "legendFormat": "Running",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(kube_pod_status_phase{phase=\"Pending\"})",
+          "legendFormat": "Pending",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(kube_pod_status_phase{phase=\"Failed\"})",
+          "legendFormat": "Failed",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        }
+      },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 8 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Network Receive (bytes/s) per Node",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (instance) (rate(node_network_receive_bytes_total[5m]))",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Network Transmit (bytes/s) per Node",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (instance) (rate(node_network_transmit_bytes_total[5m]))",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 }
+    },
+    {
+      "type": "gauge",
+      "title": "Disk Usage (%) per Node",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "(node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes * 100",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 }
+    },
+    {
+      "type": "stat",
+      "title": "Total Nodes",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "count(kube_node_info)",
+          "legendFormat": "Nodes",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 24 }
+    },
+    {
+      "type": "barchart",
+      "title": "Pods per Namespace",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "count by (namespace) (kube_pod_info{namespace=~\"monitoring|default\"})",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        }
+      },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 32 }
+    }
+  ]
+}

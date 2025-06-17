@@ -1,0 +1,13 @@
+grafana:
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+
+  adminPassword: "admin"
+
+  service:
+    type: LoadBalancer
+    port: 80
