@@ -8,6 +8,7 @@ spec:
     app: backend
   ports:
     - protocol: TCP
-    - port: 5000
-      targetPort: 5000
+      port: 5000      # A porta que o Service vai expor no cluster (pode ser diferente da targetPort, mas geralmente é a mesma ou algo como 80/443)
+      targetPort: 5000 # A porta que o seu container 'backend' está escutando (5000, conforme seu Deployment)
+      name: http-backend # Um nome descritivo para a porta. Pode ser 'http', 'api', 'backend-port', etc.
   type: ClusterIP
