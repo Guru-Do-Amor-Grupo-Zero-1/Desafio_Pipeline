@@ -71,11 +71,18 @@ jobs:
       - name: Criar namespace production
         run: kubectl create namespace production || echo "Namespace já existe"
 
+      - name: Criar namespace monitoring
+        run: kubectl create namespace monitoring || echo "Namespace já existe"
+
       - name: Aplicar manifests
         run: |
           kubectl apply -f k8s/production/ --namespace=production
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:main-${{ github.sha }} -n production
           kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:main-${{ github.sha }} -n production
+
+      - name: Aplicar ConfigMap do dashboard do Grafana
+        run: |
+          kubectl apply -f k8s/monitoring/k8s-dashboard-configmap.yaml -n monitoring
 
       - name: Setup Helm
         uses: azure/setup-helm@v3
