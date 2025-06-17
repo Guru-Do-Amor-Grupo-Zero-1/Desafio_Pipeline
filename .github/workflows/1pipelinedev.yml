@@ -23,7 +23,7 @@ jobs:
       - name: Autenticar no Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY_JJ }}'
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Setup gcloud com kubectl
         uses: google-github-actions/setup-gcloud@v2
@@ -36,11 +36,11 @@ jobs:
         run: terraform init
         working-directory: ./AtividadeSemanalTerraform
 
-      - name: Deletar cluster
-        run: |
-          gcloud container clusters delete cluster-entrega-prod \
-            --region us-central1 \
-            --quiet || echo "Cluster já estava deletado ou não existe"
+      # - name: Deletar cluster
+      #   run: |
+      #     gcloud container clusters delete cluster-entrega-prod \
+      #       --region us-central1 \
+      #       --quiet || echo "Cluster já estava deletado ou não existe"
 
       - name: Terraform Apply
         run: >
