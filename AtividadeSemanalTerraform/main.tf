@@ -20,16 +20,16 @@ resource "google_container_cluster" "primary" {
   network  = "gke-network-v2"
 
   remove_default_node_pool = true
+  initial_node_count       = 1
   deletion_protection      = false
 
   lifecycle {
     ignore_changes = [
-      endpoint,
       master_version,
       node_locations,
       network,
       subnetwork,
-      initial_node_count,
+      initial_node_count,         # Continua ignorando após o create
       logging_service,
       monitoring_service,
       services_ipv4_cidr,
@@ -40,7 +40,6 @@ resource "google_container_cluster" "primary" {
       database_encryption,
       ip_allocation_policy,
       resource_labels,
-      # Inclua outros campos que o Terraform costuma acusar mudança externa
     ]
   }
 }
