@@ -59,7 +59,7 @@
       git:
         repo: 'https://github.com/Guru-Do-Amor-Grupo-Zero-1/Desafio_Pipeline'
         dest: /home/josim/app/
-        version: dev
+        version: main
         force: yes
         
     - name: Rebuildar imagem e subir container atualizado
