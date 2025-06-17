@@ -51,6 +51,7 @@ jobs:
       - name: Build da imagem Docker do backend
         run: |
           docker build -t regiinaldo/back-gurudoamor:dev-${{ github.sha }} ./back
+          docker build -t regiinaldo/front-gurudoamor:dev-${{ github.sha }} ./front
 
       - name: Login no Docker Hub
         run: |
