@@ -76,6 +76,9 @@ jobs:
           kubectl apply -f k8s/base/ --namespace=stage
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
           kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:dev-${{ github.sha }} -n stage
+      - name: Aplicar manifests de monitoring
+        run: |
+          kubectl apply -f k8s/monitoring/ --namespace=stage
 
       - name: Setup Helm
         uses: azure/setup-helm@v3
