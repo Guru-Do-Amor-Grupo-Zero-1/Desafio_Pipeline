@@ -5,9 +5,9 @@ terraform {
       version = "~> 6.8"
     }
   }
-
   required_version = ">= 1.3.0"
 }
+
 provider "google" {
   project = var.project_id
   region  = var.region
@@ -15,24 +15,23 @@ provider "google" {
 }
 
 resource "google_container_cluster" "primary" {
-  name     = var.cluster_name
-  location = var.region
+  name     = var.cluster_name
+  location = var.region
 
-  remove_default_node_pool = true
-  initial_node_count       = 1
-
-  # Adicione esta linha para desativar a proteção
+  # Desativa a proteção contra exclusão para permitir o terraform destroy
   deletion_protection = false
 
-  node_config {
-    disk_type    = "pd-standard"
-    disk_size_gb = 12
-  }
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
-  network    = "gke-network-v2"
-  subnetwork = null
+  node_config {
+    disk_type    = "pd-standard"
+    disk_size_gb = 12
+  }
+
+  network    = "gke-network-v2"
+  subnetwork = null
 }
-
 
 # Node pool
 resource "google_container_node_pool" "primary_nodes" {
