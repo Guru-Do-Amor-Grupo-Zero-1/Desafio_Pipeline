@@ -36,17 +36,11 @@ jobs:
         run: terraform init
         working-directory: ./AtividadeSemanalTerraform
 
-
-      - name: Desabilitar deletion_protection
+      - name: Deletar cluster manualmente com gcloud
         run: |
-          terraform apply -auto-approve \
-            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-            -target=google_container_cluster.primary
-        working-directory: ./AtividadeSemanalTerraform
-      
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
-        working-directory: ./AtividadeSemanalTerraform
+          gcloud container clusters delete cluster-entrega \
+            --region us-central1 \
+            --quiet || echo "Cluster já estava deletado ou não existe"
 
       - name: Terraform Apply
         run: >
@@ -66,17 +60,16 @@ jobs:
         run: |
           docker push regiinaldo/back-gurudoamor:dev-${{ github.sha }}
 
-      - name: Acessar cluster GKE e aplicar manifests
+      - name: Acessar cluster GKE
         run: |
           gcloud container clusters get-credentials cluster-entrega \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
-          # Aplica os manifests base no namespace stage
-          kubectl apply -f k8s/base/ --namespace=stage
-
-          # Atualiza o deployment com a nova imagem
-          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
-      
       - name: Criar namespace stage
-        run: kubectl create namespace stage || echo "Namespace já existeeee"
+        run: kubectl create namespace stage || echo "Namespace já existe"
+
+      - name: Aplicar manifests
+        run: |
+          kubectl apply -f k8s/base/ --namespace=stage
+          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
