@@ -1,6 +1,7 @@
 variable "project_id" {
   description = "cluster-mensal-grupo-zero1"
   type = string
+  default = "projeto-mensal-04"
 }
 
 variable "region" {

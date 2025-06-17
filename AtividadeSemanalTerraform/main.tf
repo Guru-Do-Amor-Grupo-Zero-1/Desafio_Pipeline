@@ -1,27 +1,19 @@
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.8"
+    }
+  }
+
+  required_version = ">= 1.3.0"
+}
 provider "google" {
   project = var.project_id
   region  = var.region
   zone    = var.zone
 }
 
-# Firewall para permitir acesso ao cluster e apps (HTTP/Grafana/etc.)
-resource "google_compute_firewall" "gke_firewall" {
-  name    = "gke-firewall-${var.environment}"
-  network = "gke-network-v2"
-  allow {
-    protocol = "tcp"
-    ports    = ["22", "80", "443", "3000", "9090", "5000"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-
-  lifecycle {
-    prevent_destroy = false
-    ignore_changes = [name] # evita recriação forçada sa
-  }
-}
-
-# Cluster GKE (FALTAVA ESTE BLOCO!)
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
@@ -38,21 +30,21 @@ resource "google_container_cluster" "primary" {
   subnetwork = null
 }
 
+
 # Node pool
 resource "google_container_node_pool" "primary_nodes" {
-  name     = "primary-node-pool"
-  location = var.region
-  cluster  = google_container_cluster.primary.name
+  name       = "primary-node-pool"
+  location   = "us-central1-a"
+  cluster    = google_container_cluster.primary.name
+  node_count = 1
 
   node_config {
     machine_type = "e2-medium"
-    disk_type    = "pd-standard"
     disk_size_gb = 12
+    disk_type    = "pd-standard"
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
     ]
   }
-
-  node_count = 1
 }
