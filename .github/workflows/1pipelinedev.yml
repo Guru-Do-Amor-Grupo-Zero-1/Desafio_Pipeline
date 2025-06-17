@@ -60,6 +60,7 @@ jobs:
       - name: Push da imagem para o Docker Hub
         run: |
           docker push regiinaldo/back-gurudoamor:dev-${{ github.sha }}
+          docker push regiinaldo/front-gurudoamor:dev-${{ github.sha }}
 
       - name: Acessar cluster GKE
         run: |
