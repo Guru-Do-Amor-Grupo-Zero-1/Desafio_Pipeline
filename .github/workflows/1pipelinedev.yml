@@ -37,7 +37,6 @@ jobs:
         working-directory: ./AtividadeSemanalTerraform
 
       - name: Terraform Destroy
-        continue-on-error: true
         run: terraform destroy -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
         working-directory: ./AtividadeSemanalTerraform
 
