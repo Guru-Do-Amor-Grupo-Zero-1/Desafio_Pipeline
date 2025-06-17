@@ -15,5 +15,5 @@ variable "cluster_name" {
 }
 variable "environment" {
   type    = string
-  default = "stage"
+  default = "production"
 }

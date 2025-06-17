@@ -3,7 +3,7 @@ name: Deploy Infra e Aplicação no GKE
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 jobs:
@@ -50,8 +50,8 @@ jobs:
 
       - name: Build da imagem Docker do backend
         run: |
-          docker build -t regiinaldo/back-gurudoamor:dev-${{ github.sha }} ./back
-          docker build -t regiinaldo/front-gurudoamor:dev-${{ github.sha }} ./front-agora
+          docker build -t regiinaldo/back-gurudoamor:main-${{ github.sha }} ./back
+          docker build -t regiinaldo/front-gurudoamor:main-${{ github.sha }} ./front-agora
 
       - name: Login no Docker Hub
         run: |
@@ -59,8 +59,8 @@ jobs:
 
       - name: Push da imagem para o Docker Hub
         run: |
-          docker push regiinaldo/back-gurudoamor:dev-${{ github.sha }}
-          docker push regiinaldo/front-gurudoamor:dev-${{ github.sha }}
+          docker push regiinaldo/back-gurudoamor:main-${{ github.sha }}
+          docker push regiinaldo/front-gurudoamor:main-${{ github.sha }}
 
       - name: Acessar cluster GKE
         run: |
@@ -68,14 +68,14 @@ jobs:
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Criar namespace stage
-        run: kubectl create namespace stage || echo "Namespace já existe"
+      - name: Criar namespace production
+        run: kubectl create namespace production || echo "Namespace já existe"
 
       - name: Aplicar manifests
         run: |
-          kubectl apply -f k8s/base/ --namespace=stage
-          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
-          kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:dev-${{ github.sha }} -n stage
+          kubectl apply -f k8s/base/ --namespace=production
+          kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:main-${{ github.sha }} -n production
+          kubectl set image deployment/frontend frontend=regiinaldo/front-gurudoamor:main-${{ github.sha }} -n production
 
       - name: Setup Helm
         uses: azure/setup-helm@v3
