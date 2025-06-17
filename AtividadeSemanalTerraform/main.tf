@@ -15,19 +15,22 @@ provider "google" {
 }
 
 resource "google_container_cluster" "primary" {
-  name     = var.cluster_name
-  location = var.region
+  name     = var.cluster_name
+  location = var.region
 
-  remove_default_node_pool = true
-  initial_node_count       = 1
+  remove_default_node_pool = true
+  initial_node_count       = 1
 
-  node_config {
-    disk_type    = "pd-standard"
-    disk_size_gb = 12
-  }
+  # Adicione esta linha para desativar a proteção
+  deletion_protection = false
 
-  network    = "gke-network-v2"
-  subnetwork = null
+  node_config {
+    disk_type    = "pd-standard"
+    disk_size_gb = 12
+  }
+
+  network    = "gke-network-v2"
+  subnetwork = null
 }
 
 
