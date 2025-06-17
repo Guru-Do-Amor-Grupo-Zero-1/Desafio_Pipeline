@@ -34,7 +34,7 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./AtividadeSemanalTerraform #a
+        working-directory: ./AtividadeSemanalTerraform 
 
       # - name: Deletar cluster
       #   run: |
