@@ -52,7 +52,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
   node_config {
     machine_type = "e2-medium"
-    disk_size_gb = 10
+    disk_size_gb = 8
     disk_type    = "pd-standard"
 
     oauth_scopes = [
