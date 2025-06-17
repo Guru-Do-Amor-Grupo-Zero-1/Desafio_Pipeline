@@ -18,7 +18,6 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
 
-
   deletion_protection = false
 
   remove_default_node_pool = true
@@ -35,8 +34,11 @@ resource "google_container_cluster" "primary" {
 
 # Node pool
 resource "google_container_node_pool" "primary_nodes" {
-  name       = "primary-node-pool"
-  location   = "us-central1-a"
+  name     = "primary-node-pool"
+  
+  # CORRIGIDO: A localização do node pool agora corresponde à do cluster
+  location = google_container_cluster.primary.location
+  
   cluster    = google_container_cluster.primary.name
   node_count = 1
 
