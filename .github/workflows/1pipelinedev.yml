@@ -59,7 +59,7 @@ jobs:
           docker push regiinaldo/back-gurudoamor:dev-${{ github.sha }}
 
       - name: Criar namespace stage
-        run: kubectl create namespace stage || echo "Namespace já existeee"
+        run: kubectl create namespace stage || echo "Namespace já existeeee"
 
       - name: Acessar cluster GKE e aplicar manifests
         run: |
