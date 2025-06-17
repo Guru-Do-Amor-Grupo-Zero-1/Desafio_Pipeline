@@ -99,5 +99,5 @@ jobs:
               -n monitoring --create-namespace \
               -f k8s/monitoring/monitoring-values.yaml
           else
-            echo "Monitoring stack já instalado. Pulando.."
+            echo "Monitoring stack já instalado. Pulando..."
           fi
