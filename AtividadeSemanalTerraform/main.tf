@@ -14,21 +14,37 @@ provider "google" {
   zone    = var.zone
 }
 
-# Definição do Cluster limpa e correta
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
   network  = "gke-network-v2"
 
-  # Diz para não criar o pool de nós padrão.
-  # As configurações de initial_node_count e node_config foram removidas daqui.
   remove_default_node_pool = true
-  
-  # A linha abaixo é importante, mas o problema real está na GUI do GCP.
-  deletion_protection = false
+  deletion_protection      = false
+
+  lifecycle {
+    ignore_changes = [
+      endpoint,
+      master_version,
+      node_locations,
+      network,
+      subnetwork,
+      initial_node_count,
+      logging_service,
+      monitoring_service,
+      services_ipv4_cidr,
+      cluster_ipv4_cidr,
+      addons_config,
+      release_channel,
+      private_cluster_config,
+      database_encryption,
+      ip_allocation_policy,
+      resource_labels,
+      # Inclua outros campos que o Terraform costuma acusar mudança externa
+    ]
+  }
 }
 
-# Node pool
 resource "google_container_node_pool" "primary_nodes" {
   name       = "primary-node-pool"
   cluster    = google_container_cluster.primary.name
