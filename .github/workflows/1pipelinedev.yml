@@ -36,6 +36,14 @@ jobs:
         run: terraform init
         working-directory: ./AtividadeSemanalTerraform
 
+
+      - name: Desabilitar deletion_protection
+        run: |
+          terraform apply -auto-approve \
+            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+            -target=google_container_cluster.primary
+        working-directory: ./AtividadeSemanalTerraform
+      
       - name: Terraform Destroy
         run: terraform destroy -auto-approve -var="project_id=${{ secrets.GCP_PROJECT_ID }}"
         working-directory: ./AtividadeSemanalTerraform
