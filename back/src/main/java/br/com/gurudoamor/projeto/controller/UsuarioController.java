@@ -39,7 +39,7 @@ public class UsuarioController {
         try {
             this.usuarioService.save(usuario);
 
-            return new ResponseEntity<>("TESTE STAGE", HttpStatus.CREATED);
+            return new ResponseEntity<>("TESTE DIFEENCIADO", HttpStatus.CREATED);
 
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("Erro ao salvar usuário", HttpStatus.BAD_REQUEST);
