@@ -79,4 +79,4 @@ jobs:
           kubectl set image deployment/backend backend=regiinaldo/back-gurudoamor:dev-${{ github.sha }} -n stage
       
       - name: Criar namespace stage
-        run: kubectl create namespace stage || echo "Namespace já existee"
+        run: kubectl create namespace stage || echo "Namespace já existeeee"
