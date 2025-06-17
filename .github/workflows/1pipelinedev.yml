@@ -38,7 +38,7 @@ jobs:
 
       - name: Deletar cluster
         run: |
-          gcloud container clusters delete cluster-entrega \
+          gcloud container clusters delete cluster-entrega-prod \
             --region us-central1 \
             --quiet || echo "Cluster já estava deletado ou não existe"
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Acessar cluster GKE
         run: |
-          gcloud container clusters get-credentials cluster-entrega \
+          gcloud container clusters get-credentials cluster-entrega-prod \
             --region us-central1 \
             --project ${{ secrets.GCP_PROJECT_ID_JJ }}
 
